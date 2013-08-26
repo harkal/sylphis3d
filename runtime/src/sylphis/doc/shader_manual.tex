@@ -1,0 +1,462 @@
+\documentclass[12pt, titlepage]{amsart}
+\usepackage{graphicx}
+
+\begin{document}
+\title{Sylphis Shader Manual}
+\author{Harry Kalogirou \\
+email: harkal@gmx.net}
+\maketitle
+\tableofcontents
+\pagebreak
+
+%\begin{abstract}
+%In Sylphis shading of polygons is described by small scripts called
+%shaders. This document describes the syntax of the shader language
+%along with the features it presents.
+%\end{abstract}
+
+\section{Introduction}
+Sylphis has a very sophisticated rendering system that has many features
+and all these features can be parameterized in many different ways. In
+order to let the designers utilize all this power the Sylphis Shader
+Language is used. In Sylphis you do not apply simple images on polygons
+as textures. Shader scripts are assigned to every polygon to describe
+the exact way to shade it. With this scripts you can apply textures,
+bump and normal maps, specular maps, along with scaling, rotating,
+blending, alpha masking them.
+
+\subsection{Surface light response}
+In Sylphis the way a surface responds to light is calculated for every pixel
+that is drawn on the screen. That is to make perfect looking lighting of big
+polygons. Having that as a fact it is obvious that it is proper to have surface
+properties not assigned per polygon but per textel, something like what the texture map
+does but for more properties than color. So in Sylphis we can have more than one
+texture map per material each describing a different property.
+
+\subsubsection{The color map}
+This map stores he material color then it is ambient lit. This should not
+have any shadows drawn on it. Just the color of the surface. Some soft shadows
+might do some good but certainly not hard shadows.
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=4]{color.eps} \\
+\end{center}
+\caption{A simple color map}
+\label{figure:colormap}
+\end{figure}
+
+\subsubsection{The bump map}
+This gray scale map stores he height of the material with black being low and white being high.
+Using bump maps will make the surface look bumpy. This will be done by the engine by creating
+bright and darker lit areas on the surface depending on the bump map and how the simulated
+bumpy surface faces the light.
+
+\subsubsection{The normal map}
+The normal map has the same effect with the bump map, but it is created only by
+certain programs. Every pixel of a normal map is actually the normal vector of the
+surface at that place. This means that RGB is mapped to a (x,y,z) normal that is
+used as the surface normal used in the lighting equations of the engine.
+Most of the time normal maps create better results than bump maps since the
+normal maps are more "relaxed" on the orientation of the normals.
+
+Actually Sylphis internally always uses normal maps and when a bump map is supplied
+it is converted to a normal map.
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=1]{norm.eps} \\
+\end{center}
+\caption{A simple normal map}
+\label{figure:normalmap}
+\end{figure}
+
+\subsubsection{The gloss map}
+This map controls the color the surface reflects for when specular lit. This effectively
+controls the shininess of the surface at every pixel. Wherever the gloss map has dark
+colors the surface will look mat. Wherever the gloss map has bright colors the surface
+will look shiny.
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=1]{gloss.eps} \\
+\end{center}
+\caption{A simple gloss map}
+\label{figure:glossmap}
+\end{figure}
+
+\subsection{Rendering samples}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=.45]{nobump_gimp.eps} \\
+\end{center}
+\caption{Simple texture applied on wall}
+\label{figure:nobump}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=.45]{withbump.eps} \\
+\end{center}
+\caption{Adding a normal map}
+\label{figure:addnormalmap}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=.45]{withgloss.eps} \\
+\end{center}
+\caption{Adding a gloss map}
+\label{figure:addglossmap}
+\end{figure}
+
+\section{Shader syntax}
+The Sylphis shaders have simple syntax. The main body of the shader
+consists of a series of surface properties and rendering pass instructions
+that are grouped within curly brackets \{\}.
+
+section{The simplest script}
+The simplest shading case in Sylphis is just applying a single texture
+on a polygon. The Shader script to accomplish that is :
+
+\begin{verbatim}
+simple_shader {
+    {
+        map funny_face.jpg
+    }
+}
+\end{verbatim}
+
+The above shader has no surface parameters. It consists of only one pass
+that has assigned the funny\_face.jpg texture. As we can see the shader
+describes the rendering process as a series of rendering passes.
+
+\section{Waveform functions}
+\label{waveforms}
+Some of the shader functions make use of \textit{Waveform functions} to modulate
+certain values over time.
+
+Syntax :
+\begin{verbatim}
+wave <waveform> <base> <scale> <phase> <freq>
+\end{verbatim}
+
+The \textit{waveform} can be one of :
+\begin{itemize}
+\item \textbf{sin} : Is a simply sine wave. Ranging from -1 to 1.
+\item \textbf{triangle} : A wave with sharp ascent and then a sharp decay. Ranging for 0 to 1.
+\item \textbf{square} : Simple switches between  -1 and 1.
+\item \textbf{sawtooth} : A wave with a sharp ascent from 0 to 1 and then an instant decay to 0.
+\item \textbf{inversesawtooth} : A wave with an instant ascent to 1 and then a sharp decay from 1 to 0.
+\end{itemize}
+
+The \textit{base} is the constant that is added to the wave form. For example the sin waveform
+ranges from -1 to 1 with a \textit{base} of 0, but will range from 0 to 2, with a \textit{base}
+of 1.
+
+The \textit{scale} is the constant that will scale the wave form. For example the sin waveform
+with a \textit{scale} value of 2 will range from -2 to 2. So \textit{base} and \textit{scale}
+are applied on the original waveform function $g(t)$ like this :
+
+\begin{center}
+$f(t)=g(t)*scale + base$
+\end{center}
+
+The \textit{freq} if the waveform frequency in Hz and the \textit{phase} is the phase of the waveform.
+This should be in the range 0 to 1. Other values will be normalized in that range.
+
+
+\section{Rendering pass instructions}
+Inside the block of a rendering pass is described the way the specific pass
+will be rendered by the engine. The keywords for this are:
+
+\begin{itemize}
+\item map
+\item animmap
+\item normalmap
+\item heightmap
+\item glossmap
+\item glossiness
+\item rgbgen
+\item blendfunc
+\item alphafunc
+\item tcmod
+\item tcgen
+\end{itemize}
+
+\subsection{map}
+Syntax :
+\begin{verbatim}
+map <image name>
+\end{verbatim}
+
+With this keyword we assign the base \textit{color map} of the surface.
+
+\subsection{animmap}
+Syntax :
+\begin{verbatim}
+animmap <fps> <image name 1> ... <image name n>
+\end{verbatim}
+
+This keyword works like the \textit{map} keyword but more than one
+image can be assigned. This images are used in sequence and are
+sequenced at \textit{fps} frames per second.
+
+\subsection{normalmap}
+Syntax :
+\begin{verbatim}
+normalmap <image_name>
+\end{verbatim}
+
+With this keyword the \textit{normal map} of the surface is assigned.
+The image file specified as \textit{image\_name} is an image with normals
+coded in as colors in it.
+
+\subsection{heightmap}
+Syntax :
+\begin{verbatim}
+heightmap <image_name> [hardness]
+\end{verbatim}
+
+With this keyword we specify the \textit{height map} to be used to
+generate the \textit{normal map} for the surface. Optionally we can
+use the \textit{hardness} value to control the bumpness amount. The
+default value is 1.0.
+
+\subsection{glossmap}
+Syntax :
+\begin{verbatim}
+glossmap <image_name>
+\end{verbatim}
+
+With this keyword we specify the color the surface emits at specular
+highlights. This can be a color image.
+
+\subsection{glossness}
+Syntax :
+\begin{verbatim}
+glossness <amount>
+\end{verbatim}
+
+This keyword is used when the surface is constantly glossy over the
+surface. The \textit{amount} is a value from 0.0 to 1.0, with 0.0
+meaning totally mat surface and 1.0 a very glossy surface.
+
+\subsection{rgbgen}
+Syntax :
+\begin{verbatim}
+rgbgen <type> [additional parameters]
+\end{verbatim}
+
+This instruction controls the way the coloring of the surface is done.
+The \textit{type} can be \textit{color} or a waveform function (Section \ref{waveforms}).
+
+\subsubsection{color}
+Syntax :
+\begin{verbatim}
+color <r> <g> <b>
+\end{verbatim}
+
+Sets the color of the surface to \textit{(r, g, b)}. The color components
+range from 0.0 to 1.0
+
+\subsection{blendfunc}
+Syntax :
+\begin{verbatim}
+blendfunc <type>
+\end{verbatim}
+
+This instruction affects the way the current pass is blended with the
+previous pass and effectively with the framebuffer. The \textit{type}
+can be :
+
+\begin{itemize}
+\item \textit{blend}
+\item \textit{filter}
+\item \textit{add}
+\end{itemize}
+
+\subsection{alphafunc}
+Syntax :
+\begin{verbatim}
+alphafunc <type>
+\end{verbatim}
+
+This instruction sets the alpha test for the surface. The type can be
+\textit{gt0} or \textit{gt128}.
+
+\subsection{tcmod}
+Syntax :
+\begin{verbatim}
+tcmod <type> [additional parameters]
+\end{verbatim}
+
+This instruction controls the way the original texturing coordinates
+of the surface are modified. The \textit{type} can be
+\textit{scale, rotate, scroll, stretch, transform} and \textit{turb}.
+
+\subsubsection{scale}
+Syntax :
+\begin{verbatim}
+scale <s> <t>
+\end{verbatim}
+
+Scales the texturing coordinates by \textit{s} and \textit{t}
+
+\subsubsection{rotate}
+Syntax :
+\begin{verbatim}
+rotate <r_speed>
+\end{verbatim}
+
+Rotates the texture image on the surface with \textit{r\_speed} speed.
+
+\subsubsection{scroll}
+Syntax :
+\begin{verbatim}
+scroll <s_speed> <t_speed>
+\end{verbatim}
+
+scrolls the texture image on the surface with \textit{s\_speed} and
+\textit{t\_speed} speed.
+
+\subsubsection{stretch}
+Syntax :
+\begin{verbatim}
+stretch <waveform function>
+\end{verbatim}
+
+Stretches the texture based on a periodical waveform function (Section \ref{waveforms}).
+
+\subsubsection{transform}
+Syntax :
+\begin{verbatim}
+transform <m00> <m01> <m10> <m11> <t0> <t1>
+\end{verbatim}
+
+Transforms texture coordinates like this :
+
+\begin{center}
+$s' = s * m00 + t * m10 + t0$
+
+$t' = t * m01 + s * m11 + t1$
+\end{center}
+
+\subsection{tcgen}
+Syntax :
+\begin{verbatim}
+tcgen <type>
+\end{verbatim}
+
+This instruction makes the engine generate new texturing coordinates for
+the surface. The \textit{type} can be \textit{environment}.
+
+The \textit{environment} texturing coordinate generation causes the
+texture to look like a reflection. Also known as environment mapping.
+
+\section{Surface properties}
+The surface properties keywords are
+\begin{itemize}
+\item surfaceparm
+\item nomipmaps
+\item deformvertices
+\item sky
+\item qer\_editorimage
+\end{itemize}
+
+\subsection{surfaceparm}
+With this surface parameter we can change certain surface properties.
+The available keywords are \textit{trans} and \textit{noshadows}.
+The keyword \textit{trans} instructs that the surface is transparent. This
+means that it is possible to look through a surface with that shader
+assigned. The keyword \textit{noshadows} on the other hand instructs
+the engine not to generate shadows from surfaces with that shader. This
+means that light will not be blocked by these surfaces.
+
+Below is an example shader below causes surfaces not to cast shadows.
+
+\begin{verbatim}
+magic_wall {
+    surfaceparm noshadows
+    {
+        map bricks.jpg
+    }
+}
+\end{verbatim}
+
+\subsection{nomipmaps}
+This keyword instructs the engine not generate mipmaps
+\footnote{Mipmaps are progressive maps that are generated from the given
+texture map by halfing the size of it every time. For example from an
+128x128 texture the engine generates mipmaps with sizes 64x64, 32x32,
+16x16, 8x8, 4x4, 2x2, 1x1. Smaller mipmaps are used at greater distances
+to avoid aliasing}
+for the textures used in this shader. This useful for cases were the
+same texture must be used at all distances from the camera.
+
+\subsection{deformvertices}
+The \textit{deformvertices} keyword affects the actual position and shape of the surface.
+The vertices of the surface are modified with this shader keyword. Multiple
+deform types can be used on a single shader.
+
+Syntax :
+\begin{verbatim}
+deformvertices <type> [additional parameters]
+\end{verbatim}
+
+The \textit{type} keyword can be one of these :
+
+\begin{itemize}
+\item wave
+\item normal
+\item move
+\end{itemize}
+
+\subsubsection{wave}
+Syntax :
+\begin{verbatim}
+wave <spread> <waveform function>
+\end{verbatim}
+
+This will give a rippling effect on the surface. Vertices will move along their normal's
+direction using the periodic waveform function with different phases. The \textit{spread}
+keyword suggests the "spread" of the wave.
+
+\subsubsection{normal}
+Syntax :
+\begin{verbatim}
+normal <spread> <waveform function>
+\end{verbatim}
+
+This vertex deform keyword will work like the \textit{wave} but will affect the normals and
+not the vertices. This will affect the way the surface will be lit and reflect light.
+
+\subsubsection{}
+Syntax :
+\begin{verbatim}
+move <x> <y> <z> <waveform function>
+\end{verbatim}
+
+This vertex deform keyword will make the surface attached to appear to move altogether.
+The \textit{x}, \textit{y} and \textit{z} are the max distance that the surface will
+move on relatively to the "rest" position of the surface. The waveform function modulates
+the \textit{x}, \textit{y} and \textit{z} so the surface will move in a periodical fashion.
+
+Note that the actual surface doesn't move, it just looks like it moves.
+
+\subsection{sky}
+The keyword \textit{sky} makes this shader a sky-shader. This is a
+special kind of header and is explained in detail in an other part
+of this document.
+
+\subsection{qer\_editorimage}
+This keyword is not intended for the engine itself but for the editing tool.
+The syntax is :
+
+\begin{verbatim}
+qer_editorimage <texture name>
+\end{verbatim}
+
+The \textit{texture name} is the texture to be used in the editor.
+
+\end{document}

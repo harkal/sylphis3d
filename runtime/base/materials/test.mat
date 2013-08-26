@@ -1,0 +1,76 @@
+
+textures/wmet02 : bumpmapping {
+	technique standard {
+		pass diffuse {
+			sampler normalMap textures/wmet02_norm
+			sampler glossMap textures/wmet02_gloss
+			sampler colorMap textures/wmet02
+		}
+	}
+}
+
+textures/fmet01 : bumpmapping {
+	technique standard {
+		pass ambient {
+			sampler ambientTexture textures/fmet01
+			uniform color _lightcolor
+		}
+		pass diffuse {
+			sampler normalMap textures/fmet01_norm
+			sampler glossMap textures/fmet01_gloss
+			sampler colorMap textures/fmet01
+		}
+	}
+}
+
+
+
+textures/wmet0_2 {
+	technique standard {
+		pass ambient {
+			shader shaders/ambient.vp shaders/ambient.fp
+			sampler ambientTexture textures/rock_wall.jpg
+		}
+		pass diffuse {
+			shader shaders/bump.vp shaders/bump.fp
+			attrib tangent _tangent
+			uniform invLightSize _invlightsize
+			uniform lightPos _lightpos
+			uniform lightColor _lightcolor
+			uniform cameraPos _camerapos
+		
+			sampler colorMap textures/wmet02
+			sampler normalMap textures/wmet02_norm
+			sampler glossMap textures/wmet02_gloss
+			sampler attenuationMap _lightattenuation
+		}
+	}
+}
+
+ariba : bumpmapping {
+}
+
+
+bufferA {
+	technique standard {
+		pass ambient {
+			shader shaders/ambient.vp shaders/tonemap.fp
+			sampler RT _currentRender64
+			
+			uniform exposure _exposure
+			uniform color [1.0, 1.0, 1.0]
+		}
+	}
+}
+
+bufferAb {
+	technique standard {
+		pass ambient {
+			shader shaders/ambient.vp shaders/ambient.fp
+			sampler ambientTexture _bloom64
+			
+			
+			uniform color [1.0, 1.0, 1.0]
+		}
+	}
+}

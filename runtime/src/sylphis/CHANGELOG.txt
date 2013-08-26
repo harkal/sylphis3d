@@ -1,0 +1,8 @@
+
+9 May 2007
+
+* Changed the use of map::erase(). Not depent on returning iterator
+
+19 Apr 2007
+
+* Source build generated the executable in the runtime/ folder

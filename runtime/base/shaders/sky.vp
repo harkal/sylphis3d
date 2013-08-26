@@ -1,0 +1,70 @@
+
+uniform vec4 lightPos;		
+uniform vec3 invWavelength;	// 1 / pow(wavelength, 4) for the red, green, and blue channels
+uniform float KrESun;			// Kr * ESun
+uniform float KmESun;			// Km * ESun
+uniform float Kr4PI;			// Kr * 4 * PI
+uniform float Km4PI;			// Km * 4 * PI
+
+const int samples = 8;
+const float innerRadius = 10.0;
+const float outerRadius = 10.25;
+const float scaleDepth = 0.25;
+
+varying vec3 direction;
+varying vec3 lightDir;
+varying vec4 color;
+varying vec4 color2;
+
+float scaleFunc(float fCos){
+	float x = 1.0 - fCos;
+	return scaleDepth * exp(-0.00287 + x*(0.459 + x*(3.83 + x*(-6.80 + x*5.25))));
+}
+
+void main(void){
+	const float scale = 1.0 / (outerRadius - innerRadius);
+	const float scaleOverScaleDepth = scale / scaleDepth;
+
+	lightDir = normalize(lightPos.xyz);
+	
+#ifdef TEXCOORD_AS_POSITION
+	gl_Position = vec4(gl_MultiTexCoord0.xyz * 2.0 - 1.0, 1.0);
+#else
+	gl_Position = gl_ModelViewProjectionMatrix * vec4(normalize(gl_Vertex.xyz) * 5000.0, 1.0);
+#endif
+
+	vec3 camPos = vec3(0.0, 10.1, 0.0);
+	float cameraHeight = camPos.y;
+	vec3 pos = normalize(gl_Vertex.xyz) * outerRadius;
+	vec3 ray = pos - camPos;
+	float far = length(ray);
+	ray /= far;
+
+	vec3 start = camPos;
+	float depth = exp(scaleOverScaleDepth * (innerRadius - cameraHeight));
+	float startAngle = dot(ray, start) / cameraHeight;
+	float startOffset = depth*scaleFunc(startAngle);
+
+	float sampleLength = far / float(samples);
+	float scaledLength = sampleLength * scale;
+	vec3 sampleRay = ray * sampleLength;
+	vec3 samplePoint = start + sampleRay * 0.5;
+
+	vec3 frontColor = vec3(0.0, 0.0, 0.0);
+	for(int i=0; i<samples; i++)
+	{
+		float height = length(samplePoint);
+		float depth = exp(scaleOverScaleDepth * (innerRadius - height));
+		float lightAngle = dot(lightDir, samplePoint) / height;
+		float cameraAngle = dot(ray, samplePoint) / height;
+		float scatter = (startOffset + depth*(scaleFunc(lightAngle) - scaleFunc(cameraAngle)));
+		vec3 attenuate = exp(-scatter * (invWavelength * Kr4PI + Km4PI));
+		frontColor += attenuate * (depth * scaledLength);
+		samplePoint += sampleRay;
+	}
+
+	color2.rgb = frontColor * KmESun;
+	color.rgb = frontColor * (invWavelength * KrESun);
+
+	direction = camPos - pos;
+}

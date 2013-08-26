@@ -1,0 +1,25 @@
+
+textures/industrial/dmet01 : bumpmapping {
+	technique standard {
+		
+		pass diffuse {
+			sampler normalMap textures/industrial/dmet01_norm.png
+			sampler glossMap textures/industrial/dmet01_gloss.png
+			sampler colorMap textures/industrial/dmet01.png
+		}
+	}
+}
+
+textures/industrial/fmet01 : bumpmapping {
+	technique standard {
+		pass ambient {
+			sampler ambientTexture textures/industrial/fmet01
+			uniform color _lightcolor
+		}
+		pass diffuse {
+			sampler normalMap textures/industrial/fmet01_norm.png
+			sampler glossMap textures/industrial/fmet01_gloss.png
+			sampler colorMap textures/industrial/fmet01.png
+		}
+	}
+}

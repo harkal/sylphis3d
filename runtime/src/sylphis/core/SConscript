@@ -1,0 +1,62 @@
+
+Import('GLOBALS')
+Import(GLOBALS)
+
+core_src = Split("""
+actor.cpp             md3model.cpp               resourcemanager.cpp
+actormover.cpp        mesh.cpp                   rigidbody.cpp
+animationblender.cpp  meshloader3ds.cpp          rigidbodystatic.cpp
+beamtree.cpp          meshmanager.cpp            rigidbox.cpp
+bonekeyframe.cpp      model.cpp                  rigidcapsule.cpp
+bonetrack.cpp         modelmanager.cpp           rigidcomplex.cpp
+boundbox.cpp          normalmap.cpp              rigidcyl.cpp
+buffer.cpp            openglext.cpp              rigidsphere.cpp
+cache.cpp             physicsenvironment.cpp     scenemanager.cpp
+camera.cpp            plane.cpp                  scenemd3.cpp
+client.cpp            polygon.cpp                scenemodel.cpp
+commands.cpp          quaternion.cpp             scenenode.cpp
+configfile.cpp        renderable.cpp             scenenodemember.cpp
+controler.cpp         renderablemultimesh.cpp    sceneobject.cpp
+cvars.cpp             renderablequeuemember.cpp  server.cpp
+debugdrawing.cpp      renderchunk.cpp            serverclientbase.cpp
+engine.cpp            renderer.cpp               shader.cpp
+eventlistener.cpp     rendererARB.cpp            shadowvolume.cpp
+font.cpp              rendererARB2.cpp           silhouette.cpp
+frustum.cpp           rendererGF3.cpp            skelanimation.cpp
+ftlibrary.cpp         rendererGL.cpp             skeleton.cpp
+gutils.cpp            rendererNULL.cpp           skeletoninstance.cpp
+imagefile.cpp         rendererNV30.cpp           skelmodel.cpp
+inputdevice.cpp       rendererRadeon.cpp         splineinterpolator.cpp
+interpolator.cpp      renderingview.cpp          texture.cpp
+joint.cpp             renderingviewwin32.cpp     texturefont.cpp
+light.cpp             renderingviewx11.cpp       timer.cpp
+main.cpp              renderqueue.cpp            tokenizer.cpp
+matrix.cpp            rendertexture.cpp          vector.cpp
+matrix3.cpp           resource.cpp               vertexbuffer.cpp
+""")
+
+core_sources = []
+
+for f in core_src:
+    core_sources.append('src/' + f)
+
+env = Environment(CXXFLAGS = CXXFLAGS,
+    CPPPATH = [ 'include/',
+                '../hklib/include/',
+                '../extern/include',
+                '../extern/ode/include',
+                '../extern/stackless/Include',
+		'../extern/stackless/Stackless',
+		'../extern/ode/include/ode'],
+    LIBPATH = ['../hklib/'])
+
+conf = Configure(env)
+if not conf.CheckLibWithHeader('hk', 'vfs.h', 'C++', 'CFile f();', True):
+    print 'We need libhk'
+    Exit(1)
+if not conf.CheckLibWithHeader('z', 'zlib.h', 'C++', 'zlibVersion();', True):
+    print 'We need zlib.h'
+    Exit(1)
+env = conf.Finish()
+
+env.Program('core_out', core_sources)

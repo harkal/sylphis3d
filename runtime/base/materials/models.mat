@@ -1,0 +1,147 @@
+
+models\textures\jeep2.jpg : bumpmapping {
+
+	technique standard {
+//		pass ambient {
+//			bind texcoord0
+//			shader shaders/ambient.vp shaders/ambient.fp
+//			sampler ambientTexture models\textures\jeep2.jpg
+//			uniform color _lightcolor
+//		}
+		pass diffuse {
+			sampler normalMap models\textures\jeep2_norm.png
+			sampler glossMap models\textures\jeep2_gloss.jpg
+			sampler colorMap models\textures\jeep2.jpg
+		}
+	}
+}
+
+models\nature\teatree.png : bumpmapping {
+
+	technique standard {
+		pass ambient {
+			bind texcoord0
+			shader shaders/ambient.vp shaders/ambient.fp
+			sampler ambientTexture models\nature\teatree.png
+			uniform color _lightcolor
+			cull none
+		}
+		pass diffuse {
+			sampler normalMap models\nature\teatree_norm.png
+			sampler glossMap _black
+			sampler colorMap models\nature\teatree.png
+			cull none
+		}
+	}
+}
+
+
+models\nature\palm.png : bumpmapping {
+
+	technique standard {
+		pass ambient {
+			bind texcoord0
+			shader shaders/ambient.vp shaders/ambient.fp
+			sampler ambientTexture models\nature\palm.png
+			uniform color _lightcolor
+			cull none
+		}
+		pass diffuse {
+			sampler normalMap models\nature\palm_norm.png
+			sampler glossMap _black
+			sampler colorMap models\nature\palm.png
+			cull none
+		}
+	}
+}
+
+
+models\textures\bball.png : bumpmapping {
+	technique standard {
+		pass diffuse {
+			sampler normalMap models/textures/bball_normals.png
+			sampler glossMap models/textures/bball_gloss.png
+			sampler colorMap models/textures/bball.png
+		}
+	}
+}
+
+models\textures\pmet03.jpg : bumpmapping {
+	technique standard {
+		pass diffuse {
+			sampler normalMap models/textures/pmet03_norm.png
+			sampler glossMap models/textures/pmet03_gloss.png
+			sampler colorMap models/textures/pmet03.jpg
+		}
+	}
+}
+
+terrain_base {
+	technique standard {
+		pass ambient {
+			bind texcoord0
+			shader shaders/terrain_ambient.vp shaders/terrain_ambient.fp
+			sampler colorMap _white
+			sampler grassMap _white
+			sampler rockMap _white
+			uniform lightColor _lightcolor
+		}
+		pass diffuse {
+			bind normal
+			bind texcoord0
+			shader shaders/terrain.vp shaders/terrain.fp
+			attrib tangent _tangent
+			uniform invLightSize _invlightsize
+			uniform lightPos _lightpos
+			uniform lightColor _lightcolor
+			//uniform cameraPos _camerapos
+		
+			sampler colorMap _white
+//			sampler normalMap textures/_norm_flat.png
+			//sampler glossMap _white
+			sampler attenuationMap _lightattenuation
+			
+			blend add
+		}
+	}
+}
+
+
+textures\terrain.jpg  : terrain_base {
+	technique standard {
+		pass ambient {
+			sampler colorMap textures\terrain.jpg
+			sampler grassMap textures/grass.png
+			sampler rockMap textures/cliff.png
+		}
+		pass diffuse {
+			//sampler glossMap textures\terrain_gloss.jpg
+			sampler colorMap textures\terrain.jpg
+			sampler detailMap textures/cliffnorm.png
+			sampler grassMap textures/grass.png
+			sampler rockMap textures/cliff.png
+		}
+	}
+}
+
+models\textures\jeep2.jpg : bumpmapping {
+	technique standard {
+		pass diffuse {
+			sampler normalMap textures/_norm_flat.png
+			sampler glossMap _black
+			sampler colorMap _white
+		}
+	}
+}
+
+models\textures\car.png  : bumpmapping {
+	technique standard {
+		pass diffuse {
+			sampler normalMap textures/_norm_flat.png
+			sampler glossMap _white
+			sampler colorMap _black
+
+		}
+	}
+}
+

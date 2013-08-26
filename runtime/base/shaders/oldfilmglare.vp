@@ -1,0 +1,34 @@
+
+uniform vec2 invViewSize;
+uniform float frameTime;
+
+varying float bright;
+
+void main(void)
+{
+   gl_Position = ftransform();   
+
+   // Setup the texture coordinates for 
+   // accessing the _currentRender texture
+   gl_TexCoord[0].x = gl_MultiTexCoord0.x;
+   gl_TexCoord[0].y = 1.0 - gl_MultiTexCoord0.y;
+   gl_TexCoord[0].xy = gl_TexCoord[0].xy  * invViewSize;
+
+   gl_TexCoord[0].x += sin(frameTime * 1360.0) * 0.002;
+   gl_TexCoord[0].y += sin(frameTime * 4.0) * 0.002;
+
+   gl_TexCoord[3].x = gl_MultiTexCoord0.x;
+   gl_TexCoord[3].y = gl_MultiTexCoord0.y;
+
+   gl_TexCoord[1].xy = gl_MultiTexCoord0.xy;
+   gl_TexCoord[1].x += sin(frameTime * 50.0) + cos(20.0 * frameTime);
+   gl_TexCoord[1].y += cos(frameTime * 34.0) + sin(frameTime);
+
+   gl_TexCoord[2].xy = gl_MultiTexCoord0.xy;
+   gl_TexCoord[2].x += sin(frameTime * 0.7) * 20.0;
+   gl_TexCoord[2].y -= frameTime * 10.0;
+
+   bright = clamp(3.0 * sin(frameTime * 20.0) * sin(frameTime * 50.0), 0.7, 1.0);
+
+}
+

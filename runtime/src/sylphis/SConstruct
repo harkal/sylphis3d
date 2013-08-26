@@ -1,0 +1,103 @@
+
+
+import SCons
+import commands, re, sys, os, pickle, string, popen2
+
+EnsureSConsVersion( 0, 96 )
+print 'SCons ' + SCons.__version__
+
+serialized=['CC', 'CXX', 'JOBS', 'BUILD']
+
+##
+## System detection
+
+# CPU type
+gCpu = commands.getoutput('uname -m')
+exp = re.compile('.*i?86.*')
+if (gCpu == 'Power Macintosh' or gCpu == 'ppc'):
+  gCpu = 'ppc'
+elif exp.match(gCpu):
+  gCpu = 'x86'
+else:
+  gCpu = 'cpu'
+
+# OS
+OS = commands.getoutput('uname')
+print "OS=\"" + OS + "\""
+
+if (OS == 'Linux'):
+  # libc .. do the little magic!
+  libc = commands.getoutput('/lib/libc.so.6 |grep "GNU C "|grep version|awk -F "version " \'{ print $2 }\'|cut -b -3')
+
+# Default parameters
+CC='gcc'
+CXX='g++'
+JOBS='1'
+BUILD='debug'
+INSTALL='#install'
+gBuildRoot = 'build'
+
+for k in serialized:
+    if (ARGUMENTS.has_key(k)):
+        exec_cmd = k + '=\"' + ARGUMENTS[k] + '\"'
+        print 'Command line: ' + exec_cmd
+        exec(exec_cmd)
+
+gBuild = gBuildRoot + '/' + BUILD
+SetOption('num_jobs', JOBS)
+        
+##
+## Check GCC Version
+##
+def GetGCCVersion(name):
+  ret = commands.getstatusoutput('%s -dumpversion' % name)
+  if ( ret[0] != 0 ):
+    return None
+  vers = string.split(ret[1], '.')
+  if ( len(vers) == 2 ):
+    return [ vers[0], vers[1], 0 ]
+  elif ( len(vers) == 3 ):
+    return vers
+  return None
+
+ver_cc = GetGCCVersion(CC)
+ver_cxx = GetGCCVersion(CXX)
+
+if ( ver_cc is None or ver_cxx is None or ver_cc[0] < '3' or ver_cxx[0] < '3'):
+  print 'Compiler version check failed - need gcc 3.x or later:'
+  print 'CC: %s %s\nCXX: %s %s' % ( CC, repr(ver_cc), CXX, repr(ver_cxx) )
+  Exit(1)
+
+LINK = CXX
+# common flags
+warningFlags = ' '
+warningFlagsCXX = ' '
+CCFLAGS = '' + warningFlags
+CXXFLAGS = '-pipe -D_LINUX ' + warningFlags + warningFlagsCXX
+CPPPATH = []
+if (BUILD == 'debug'):
+    CXXFLAGS += '-g -D_DEBUG '
+    CCFLAGS += '-g -D_DEBUG '
+elif (BUILD == 'release'):
+    CXXFLAGS += '-O2 '
+    CCFLAGS += '-O2 '
+else:
+    print 'Unknown build configuration ' + BUILD
+    sys.exit( 0 )
+
+class CSylphisEnvironment(Environment):
+    def __init__(self):
+        Environment.__init__(self)
+        self.CXXFLAGS = CXXFLAGS
+    
+gEnv = CSylphisEnvironment()
+
+# export the globals
+GLOBALS = 'gEnv INSTALL gCpu CXXFLAGS'
+
+Default('.')
+
+Export('GLOBALS ' + GLOBALS)
+
+SConscript('core/SConscript')
+

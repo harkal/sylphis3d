@@ -1,0 +1,30 @@
+!!ARBfp1.0
+OPTION ARB_precision_hint_fastest;
+ATTRIB tex0 = fragment.texcoord[0];
+ATTRIB tex1 = fragment.texcoord[1];
+ATTRIB tex2 = fragment.texcoord[2];
+ATTRIB tex3 = fragment.texcoord[3];
+ATTRIB tex4 = fragment.texcoord[4];
+ATTRIB glowFactor = fragment.texcoord[5];
+
+TEMP sum, lookup;
+
+TEX sum, tex0, texture[0], 2D;
+
+TEX lookup, tex1, texture[0], 2D;
+ADD sum, lookup, sum;
+
+TEX lookup, tex2, texture[0], 2D;
+ADD sum, lookup, sum;
+
+TEX lookup, tex3, texture[0], 2D;
+ADD sum, lookup, sum;
+
+TEX lookup, tex4, texture[0], 2D;
+ADD sum, lookup, sum;
+
+MUL sum, glowFactor.xxxx, sum;
+
+SUB result.color, sum, glowFactor.yyyy;
+
+END

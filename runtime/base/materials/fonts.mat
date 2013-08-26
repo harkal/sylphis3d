@@ -1,0 +1,19 @@
+
+fonts/casual {
+	technique standard {
+		pass ambient {
+			//shader shaders/ambient.vp shaders/ambient.fp
+			//sampler ambientTexture textures/fonts/fontcasual.png
+			texture textures/fonts/fontcasual.png
+		}
+	}
+}
+
+fonts/hiscore {
+	technique standard {
+		pass ambient {
+			shader shaders/ambient.vp shaders/ambient.fp
+			sampler ambientTexture textures/fonts/fonthiscore.png
+		}
+	}
+}

@@ -1,0 +1,4 @@
+import glob 
+env = Environment(tools=['mingw']) 
+env.Program(target='mc', source = Split(glob.glob('src/*.cpp'))) 
+

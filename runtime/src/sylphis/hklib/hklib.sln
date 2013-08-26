@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hklib", "hklib.vcproj", "{95501340-7936-458F-BAA3-696F00B6A790}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hklib_test", "hklib_test\hklib_test.vcproj", "{AC68FF26-5838-4959-AC52-F0A1348B58AA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{95501340-7936-458F-BAA3-696F00B6A790} = {95501340-7936-458F-BAA3-696F00B6A790}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{95501340-7936-458F-BAA3-696F00B6A790}.Debug.ActiveCfg = Debug|Win32
+		{95501340-7936-458F-BAA3-696F00B6A790}.Debug.Build.0 = Debug|Win32
+		{95501340-7936-458F-BAA3-696F00B6A790}.Release.ActiveCfg = Release|Win32
+		{95501340-7936-458F-BAA3-696F00B6A790}.Release.Build.0 = Release|Win32
+		{AC68FF26-5838-4959-AC52-F0A1348B58AA}.Debug.ActiveCfg = Debug|Win32
+		{AC68FF26-5838-4959-AC52-F0A1348B58AA}.Debug.Build.0 = Debug|Win32
+		{AC68FF26-5838-4959-AC52-F0A1348B58AA}.Release.ActiveCfg = Release|Win32
+		{AC68FF26-5838-4959-AC52-F0A1348B58AA}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

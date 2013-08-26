@@ -1,0 +1,44 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!DOCTYPE KDevPrjSession>
+<KDevPrjSession>
+ <LastCompileConfig>(Default)</LastCompileConfig>
+ <Mainframe MaximizeMode="1" />
+ <DocsAndViews NumberOfDocuments="12" >
+  <Doc0 CursorPosLine="128" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="1" FileName="/home/harkal/projects/mapcompiler/src/polygon.cpp" >
+   <View0 Top="25" Width="400" Attach="1" Height="300" Left="3" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc0>
+  <Doc1 CursorPosLine="0" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="0" FileName="/home/harkal/projects/mapcompiler/src/entity.h" >
+   <View0 Top="123" Width="755" Attach="1" Height="426" Left="36" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc1>
+  <Doc2 CursorPosLine="3" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="0" FileName="/home/harkal/projects/mapcompiler/CHANGELOG" >
+   <View0 Top="123" Width="755" Attach="1" Height="426" Left="36" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc2>
+  <Doc3 CursorPosLine="208" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="4" FileName="/home/harkal/projects/mapcompiler/src/polygon.h" >
+   <View0 Top="125" Width="755" Attach="1" Height="427" Left="36" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc3>
+  <Doc4 CursorPosLine="159" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="57" FileName="/home/harkal/projects/mapcompiler/src/portalcreator.cpp" >
+   <View0 Top="123" Width="755" Attach="1" Height="426" Left="36" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc4>
+  <Doc5 CursorPosLine="109" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="27" FileName="/home/harkal/projects/mapcompiler/src/floodgate.cpp" >
+   <View0 Top="123" Width="755" Attach="1" Height="426" Left="36" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc5>
+  <Doc6 CursorPosLine="135" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="18" FileName="/home/harkal/projects/mapcompiler/src/portal.cpp" >
+   <View0 Top="123" Width="755" Attach="1" Height="404" Left="36" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc6>
+  <Doc7 CursorPosLine="737" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="19" FileName="/home/harkal/projects/mapcompiler/src/bspwriter.cpp" >
+   <View0 Top="123" Width="755" Attach="1" Height="404" Left="36" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc7>
+  <Doc8 CursorPosLine="15" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="29" FileName="/home/harkal/projects/mapcompiler/src/portal.h" >
+   <View0 Top="123" Width="755" Attach="1" Height="404" Left="36" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc8>
+  <Doc9 CursorPosLine="0" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="0" FileName="/home/harkal/projects/mapcompiler/src/shader.h" >
+   <View0 Top="123" Width="755" Attach="1" Height="404" Left="36" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc9>
+  <Doc10 CursorPosLine="107" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="26" FileName="/home/harkal/projects/mapcompiler/src/shader.cpp" >
+   <View0 Top="255" Width="755" Attach="1" Height="404" Left="233" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc10>
+  <Doc11 CursorPosLine="0" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="0" FileName="/home/harkal/projects/mapcompiler/t.h" >
+   <View0 Top="253" Width="761" Attach="1" Height="432" Left="253" Focus="1" Type="KWriteView" MinMaxMode="2" />
+  </Doc11>
+ </DocsAndViews>
+</KDevPrjSession>

@@ -1,0 +1,17 @@
+
+env = Environment(CPPPATH = ['../include/'], LIBPATH = ['../'])
+conf = Configure(env)
+if not conf.CheckLibWithHeader('hk', 'vfs.h', 'C++', 'CFile f();', True):
+	print 'We need libhk'
+	Exit(1)
+if not conf.CheckLibWithHeader('z', 'zlib.h', 'C++', 'zlibVersion();', True):
+	print 'We need zlib.h'
+	Exit(1)
+env = conf.Finish()
+
+sources = [
+'hklib_test.cpp',
+]
+
+env.Program('libhk_test', sources)
+

@@ -1,0 +1,30 @@
+attribute vec3 tangent;
+
+uniform vec3 invLightSize;
+uniform vec4 cameraPos;
+uniform vec4 lightPos;
+
+varying	vec3 lightVec;
+varying vec3 cameraVec;
+varying	vec3 halfVec;
+varying	vec3 attVec;
+
+void main()
+{
+	gl_Position = ftransform();
+	gl_TexCoord[0] = gl_MultiTexCoord0;
+
+	vec3 binormal = cross(gl_Normal, tangent);
+
+	lightVec = normalize(lightPos.xyz - gl_Vertex.xyz);
+	cameraVec = normalize(cameraPos.xyz - gl_Vertex.xyz);
+
+	mat3 texSpace = mat3(tangent, binormal, gl_Normal);
+
+	attVec = (gl_Vertex.xyz - lightPos.xyz) * invLightSize * 0.5 + .5;
+
+	lightVec = lightVec * texSpace;
+	cameraVec = cameraVec * texSpace;
+	halfVec = lightVec + cameraVec;
+}
+

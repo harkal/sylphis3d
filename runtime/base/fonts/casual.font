@@ -1,0 +1,53 @@
+
+//
+// Sylphis texture font
+// 
+// <ASCII> <x> <y> <w> <h> <shader> 
+//
+
+// 49 0 0 256 256 crosshair
+
+48 43 19 40 53 fonts/casual
+49 98 19 35 53 fonts/casual
+50 149 19 40 53 fonts/casual
+51 205 19 40 53 fonts/casual
+52 261 19 40 53 fonts/casual
+53 317 19 42 53 fonts/casual
+54 374 19 42 53 fonts/casual
+55 432 19 40 53 fonts/casual
+
+56 43 72 37 53 fonts/casual
+57 96 72 40 53 fonts/casual
+46 154 72 20 53 fonts/casual
+126 194 72 26 53 fonts/casual
+96 237 72 18 53 fonts/casual
+33 274 72 24 53 fonts/casual
+64 316 72 44 53 fonts/casual
+35 375 72 40 53 fonts/casual
+36 430 72 30 53 fonts/casual
+
+37 41 125 30 53 fonts/casual
+94 88 125 28 53 fonts/casual
+38 132 125 40 53 fonts/casual
+42 188 125 30 53 fonts/casual
+40 233 125 26 53 fonts/casual
+41 274 125 26 53 fonts/casual
+95 316 125 50 53 fonts/casual
+45 385 125 32 53 fonts/casual
+43 437 125 34 53 fonts/casual
+
+61 44 178 28 53 fonts/casual
+58 92 178 18 53 fonts/casual
+63 128 178 35 53 fonts/casual
+59 180 178 18 53 fonts/casual
+39 215 178 22 53 fonts/casual
+34 252 178 35 53 fonts/casual
+92 304 178 30 53 fonts/casual
+47 350 178 27 53 fonts/casual
+60 396 178 22 53 fonts/casual
+62 436 178 22 53 fonts/casual
+
+123 42 231 22 53 fonts/casual
+125 78 231 22 53 fonts/casual
+91 116 231 26 53 fonts/casual
+93 159 231 26 53 fonts/casual

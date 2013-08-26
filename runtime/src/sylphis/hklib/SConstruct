@@ -1,0 +1,22 @@
+
+env = Environment(CPPPATH = ['include/','extern/zlib'])
+conf = Configure(env)
+if not conf.CheckLibWithHeader('z', 'zlib.h', 'C++', 'zlibVersion();'):
+	print 'We need zlib.h'
+	Exit(1)
+env = conf.Finish()
+
+sources = [
+'src/classinfo.cpp',
+'src/console.cpp',
+'src/exception.cpp',
+'src/pointer.cpp',
+'src/refobject.cpp',
+'src/serialize.cpp',
+'src/serializer.cpp',
+'src/vfs.cpp',
+'extern/zlib/unzip.cpp'
+]
+
+env.StaticLibrary('hk', sources)
+

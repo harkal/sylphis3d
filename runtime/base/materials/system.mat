@@ -1,0 +1,268 @@
+
+//
+// Fundamental system materials
+//
+
+failed_to_load {
+	technique standard {
+		pass ambient {
+			texture texture/system/failedtoload
+		}
+	}
+}
+
+caulk {
+	transparent
+	
+}
+
+parallax {
+	technique standard {
+		pass ambient {
+			bind texcoord0
+			shader shaders/ambient.vp shaders/ambient.fp
+			sampler ambientTexture textures/rock_wall.jpg
+			uniform color [0.0, 0.0, 0.0, 1.0]
+		}
+		pass diffuse {
+			bind normal
+			bind texcoord0
+			shader shaders/diffuse.vp shaders/diffuse.fp
+			attrib tangent _tangent
+			uniform invLightSize _invlightsize
+			uniform lightPos _lightpos
+			uniform lightColor _lightcolor
+			uniform cameraPos _camerapos
+			uniform bumpSize [0.02, -0.01]
+		
+			sampler colorMap textures/rock_wall.jpg
+			sampler normalMap textures/rock_wall_norm.jpg
+			sampler bumpMap textures/rock_wall_bump.jpg
+			sampler attenuationMap _lightattenuation
+			
+			blend add
+		}
+	}
+}
+
+bumpmapping {
+	technique standard {
+		pass ambient {
+			bind texcoord0
+			shader shaders/ambient.vp shaders/ambient.fp
+			sampler ambientTexture _black
+			uniform color _lightcolor
+		}
+		pass diffuse {
+			bind normal
+			bind texcoord0
+			shader shaders/bump.vp shaders/bump.fp
+			attrib tangent _tangent
+			uniform invLightSize _invlightsize
+			uniform lightPos _lightpos
+			uniform lightColor _lightcolor
+			uniform cameraPos _camerapos
+		
+			sampler colorMap textures/rock_wall.jpg
+			sampler normalMap textures/rock_wall_norm.jpg
+			sampler glossMap textures/rock_wall_bump.jpg
+			sampler attenuationMap _lightattenuation
+			
+			blend add
+		}
+	}
+}
+
+glare {
+	technique standard {
+		pass ambient2 {
+			bind texcoord0
+			ambient
+			shader shaders/ambient.vp shaders/bloom.fp
+			sampler bloom256 _bloom256
+			sampler bloom128 _bloom128
+			sampler bloom64 _bloom64
+			sampler bloom32 _bloom32
+			sampler bloom32 _bloom16
+			
+			depthtest false
+			depthwrite none
+			blend add
+		}
+	}
+}
+
+viewtex {
+	technique standard {
+		pass ambient {
+			bind texcoord0
+			texture _currentRender1
+			depthtest false
+		}
+	}
+}
+
+viewtex2 {
+	technique standard {
+		pass ambient {
+			bind texcoord0
+			shader shaders/ambient.vp shaders/ambient.fp
+			sampler ambientTexture _variabletexture
+			uniform color [1.0, 1.0, 1.0, 1.0]
+			depthtest false
+
+		}
+	}
+}
+
+
+motionblur
+{
+	//qer_editorimage textures/256x128.jpg
+	technique standard {
+		pass ambient {
+			bind texcoord0
+			ambient
+			shader shaders/motionblur.vp shaders/motionblur.fp
+			uniform invViewSize _invviewsize
+			uniform amount 0.3
+		
+			sampler currentRender _currentRender
+			sampler speedBuffer   _speedbuffer
+		}
+	}
+}
+
+speedShader
+{
+	//qer_editorimage textures/256x128.jpg
+	technique standard {
+		pass ambient {
+			bind texcoord0
+			ambient
+			shader shaders/speed.vp shaders/speed.fp
+			uniform lastMVPMatrix _lastMVPMatrix
+		}
+	}
+}
+
+glare_ {
+	technique standard {
+		pass decompress {
+			ambient
+			shader shaders/ambient.vp shaders/convtofp.fp
+			target _bufferA
+			sampler RT _currentRenderSmall
+			uniform exposure _exposure
+			
+			//blend add
+		}
+		pass blur_h1 {
+			ambient
+			shader shaders/blur.vp shaders/blur_h_l.fp
+			target _bufferB
+			sampler RT _bufferA
+		}
+		pass blur_v1 {
+			ambient
+			shader shaders/blur.vp shaders/blur_v_l.fp
+			target _bufferA
+			sampler RT _bufferB
+		}
+		pass blur_h2 {
+			ambient
+			shader shaders/blur.vp shaders/blur_h.fp
+			target _bufferB
+			sampler RT _bufferA
+		}
+		pass blur_v2 {
+			ambient
+			shader shaders/blur.vp shaders/blur_v.fp
+			target _bufferA
+			sampler RT _bufferB
+		}
+		pass blur_h3 {
+			ambient
+			shader shaders/blur.vp shaders/blur_h.fp
+			target _bufferB
+			sampler RT _bufferA
+		}
+		pass blur_v3 {
+			ambient
+			shader shaders/blur.vp shaders/blur_v.fp
+			target _bufferA
+			sampler RT _bufferB
+		}
+		pass blur_h4 {
+			ambient
+			shader shaders/blur.vp shaders/blur_h_l.fp
+			target _bufferB
+			sampler RT _bufferA
+		}
+		pass blur_v4 {
+			ambient
+			shader shaders/blur.vp shaders/blur_v_l.fp
+			target _bufferA
+			sampler RT _bufferB
+		}
+		pass ambient2 {
+			ambient
+			shader shaders/ambient.vp shaders/blur_final.fp
+			sampler ambientTexture _bufferA
+			uniform exposure _exposure
+			blend add
+		}
+	}
+}
+
+default : bumpmapping {
+}
+
+test_vfp : bumpmapping {
+}
+
+sky
+{
+	//qer_editorimage textures/256x128.jpg
+	technique standard {
+		pass ambient_ {
+			bind texcoord0
+			//ambient
+			shader shaders/sky.vp shaders/sky.fp
+			uniform lightPos _lightpos
+			uniform invWavelength func shaders.sky.getInvWaveLength()
+			uniform KrESun func shaders.sky.fKrESun()
+			uniform KmESun func shaders.sky.fKmESun()
+			uniform Kr4PI func shaders.sky.m_Kr4PI()
+			uniform Km4PI func shaders.sky.m_Km4PI()
+			uniform g func shaders.sky.getG()
+			uniform g2 func shaders.sky.getG2()
+
+			cull none
+		}
+	}
+}
+
+sky_flat 
+{
+	//qer_editorimage textures/256x128.jpg
+	technique standard {
+		pass ambient_ {
+			bind texcoord0
+			//ambient
+			shader shaders/sky.vp shaders/sky.fp define(TEXCOORD_AS_POSITION)
+			uniform lightPos _lightpos
+			uniform invWavelength func shaders.sky.getInvWaveLength()
+			uniform KrESun func shaders.sky.fKrESun()
+			uniform KmESun func shaders.sky.fKmESun()
+			uniform Kr4PI func shaders.sky.m_Kr4PI()
+			uniform Km4PI func shaders.sky.m_Km4PI()
+			uniform g func shaders.sky.getG()
+			uniform g2 func shaders.sky.getG2()
+
+			cull none
+		}
+	}
+}
+
+

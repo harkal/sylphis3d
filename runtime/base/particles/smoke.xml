@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<particlesystemdefs>
+  <particlesystem name="spark">
+
+    <material>textures/smoke</material>
+
+    <emitter shape="sphere">
+      <radius>5.0</radius>
+      <rate>5.0</rate>
+      <time>20.1</time>
+    </emitter>
+
+    <budget>1000</budget>
+
+    <rotation>0.0</rotation>
+    <rotationspeed>0.0</rotationspeed>
+
+    <particledef type="billboard">
+      <size>
+        <interpolator>
+          <node key="0.0">
+            <float>0.6</float>
+          </node>
+          <node key="0.2">
+            <float>20.0</float>
+          </node>
+          <node key="0.5">
+            <float>50.6</float>
+          </node>
+        </interpolator>
+      </size>
+      <aspectratio>
+        <interpolator>
+          <node key="0.1">
+            <float>1.0</float>
+          </node>
+        </interpolator>
+      </aspectratio>
+    </particledef>
+
+    <lifetime>10.5</lifetime>
+
+    <acceleration>0.0 10.0 0.0</acceleration>
+
+    <spawn direction="natural" variation="2.0" velocitymin="0.0" velocitymax="0.0" />
+
+    <collitions enabled="true" bounce="0.3"/>
+
+  </particlesystem>
+</particlesystemdefs>

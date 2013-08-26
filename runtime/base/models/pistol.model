@@ -1,0 +1,19 @@
+//
+// model: pistol
+//
+
+path models/pistol/
+
+skeleton pistol.csf
+
+animation idle.caf idle
+animation fire.caf fire
+animation reload.caf reload
+animation dryfire.caf dryfire
+
+mesh pistol.cmf
+material pistol
+
+mesh hand.cmf
+material hand
+
