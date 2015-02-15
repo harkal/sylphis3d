@@ -22,12 +22,21 @@
 	IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ***************************************************************************/
+
 #include <matrix3.h>
 #include <math.h>
 #include <memory.h>
 
-#define ZERO_MATRIX(m)	memset((m), 0, sizeof((m)))
-#define COPY_MATRIX(d,s)	memcpy((d), (s), sizeof((d)))
+#ifdef __QNX__
+#define	sMemset(x,y,z)	std::memset(x,y,z)
+#define	sMemcpy(x,y,z)	std::memcpy(x,y,z)
+#else
+#define	sMemset(x,y,z)	memset(x,y,z)
+#define	sMemcpy(x,y,z)	memcpy(x,y,z)
+#endif
+
+#define ZERO_MATRIX(m)	sMemset((m), 0, sizeof((m)))
+#define COPY_MATRIX(d,s)	sMemcpy((d), (s), sizeof((d)))
 
 
 
@@ -143,7 +152,7 @@ CMatrix3& CMatrix3::transpose() {
 }
 
 CMatrix3& CMatrix3::operator= (const CMatrix3& b) {
-	memcpy(m, (b.m), sizeof(b.m));
+	sMemcpy(m, (b.m), sizeof(b.m));
 	return *this;
 }
 
@@ -158,17 +167,14 @@ CMatrix3 operator*  (const CMatrix3& a_, const CMatrix3& b_) {
     r.m[0][0] = a_.m[0][0] * b_.m[0][0] + a_.m[0][1] * b_.m[1][0] + a_.m[0][2] * b_.m[2][0];
     r.m[0][1] = a_.m[0][0] * b_.m[0][1] + a_.m[0][1] * b_.m[1][1] + a_.m[0][2] * b_.m[2][1];
     r.m[0][2] = a_.m[0][0] * b_.m[0][2] + a_.m[0][1] * b_.m[1][2] + a_.m[0][2] * b_.m[2][2];
-    r.m[0][3] = a_.m[0][0] * b_.m[0][3] + a_.m[0][1] * b_.m[1][3] + a_.m[0][2] * b_.m[2][3];
 
     r.m[1][0] = a_.m[1][0] * b_.m[0][0] + a_.m[1][1] * b_.m[1][0] + a_.m[1][2] * b_.m[2][0];
     r.m[1][1] = a_.m[1][0] * b_.m[0][1] + a_.m[1][1] * b_.m[1][1] + a_.m[1][2] * b_.m[2][1];
     r.m[1][2] = a_.m[1][0] * b_.m[0][2] + a_.m[1][1] * b_.m[1][2] + a_.m[1][2] * b_.m[2][2];
-    r.m[1][3] = a_.m[1][0] * b_.m[0][3] + a_.m[1][1] * b_.m[1][3] + a_.m[1][2] * b_.m[2][3];
 
     r.m[2][0] = a_.m[2][0] * b_.m[0][0] + a_.m[2][1] * b_.m[1][0] + a_.m[2][2] * b_.m[2][0];
     r.m[2][1] = a_.m[2][0] * b_.m[0][1] + a_.m[2][1] * b_.m[1][1] + a_.m[2][2] * b_.m[2][1];
     r.m[2][2] = a_.m[2][0] * b_.m[0][2] + a_.m[2][1] * b_.m[1][2] + a_.m[2][2] * b_.m[2][2];
-    r.m[2][3] = a_.m[2][0] * b_.m[0][3] + a_.m[2][1] * b_.m[1][3] + a_.m[2][2] * b_.m[2][3];
 
     return r;
 }
